@@ -13,7 +13,8 @@ const receiveSms = async (req, res) => {
     const twiml = new MessagingResponse()
     twiml.message('The Robots are coming! Head for the hills!')
     res.writeHead(200, { 'Content-Type': 'text/xml' })
-    console.log(req.body)
+    console.log(`request: ${req}`)
+    console.log(`request body : ${req.body}`)
     const msg = `${req.body.From} : ${req.body.Body}`
     await postToTwilio(msg, myPhoneNumber)
     res.end(twiml.toString())
