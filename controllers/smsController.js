@@ -1,6 +1,6 @@
 require('../env.js')
 const axios = require('axios')
-//const MessagingResponse = require('twilio').twiml.MessagingResponse
+const MessagingResponse = require('twilio').twiml.MessagingResponse
 
 const authToken = process.env.TWILIO_AUTH_TOKEN
 const accountSid = process.env.TWILIO_ACCOUNT_SID
@@ -21,7 +21,7 @@ const receiveSms = async (req, res) => {
 
     if (from === myPhoneNumber && bodyArray[0] === 'sendMsg') {
       const to = bodyArray[1]
-      const msgBody = bodyArray.splice(0, 2).join(' ')
+      const msgBody = bodyArray.splice(2, bodyArray.length - 1).join(' ')
       await postToTwilio(msgBody, to)
       const twiml = new MessagingResponse()
       twiml.message(`msg has been forwarded to: ${to}`)
