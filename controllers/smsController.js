@@ -12,7 +12,7 @@ const receiveSms = async (req, res) => {
   try {
     const from = req.body.From
     const body = req.body.Body
-    const bodyArray = body.split('')
+    const bodyArray = body.split(' ')
     console.log('in receive sms')
     console.log(`from :${from}`)
     console.log(`code :${bodyArray[0]}`)
@@ -21,7 +21,7 @@ const receiveSms = async (req, res) => {
 
     if (from === myPhoneNumber && bodyArray[0] === 'sendMsg') {
       const to = bodyArray[1]
-      const msgBody = bodyArray.splice(0, 2).join('')
+      const msgBody = bodyArray.splice(0, 2).join(' ')
       await postToTwilio(msgBody, to)
       const twiml = new MessagingResponse()
       twiml.message(`msg has been forwarded to: ${to}`)
