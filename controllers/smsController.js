@@ -10,14 +10,24 @@ const smsServiceUrl = `https://api.twilio.com/2010-04-01/Accounts/${accountSid}/
 
 const receiveSms = async (req, res) => {
   try {
-    console.log('in receive sms')
-    const msg = `${req.body.From} : ${req.body.Body}`
-    console.log(`msg is ${msg}`)
-    await postToTwilio(msg, myPhoneNumber)
-    // const twiml = new MessagingResponse()
-    // twiml.message('The Robots are coming! Head for the hills!')
-    res.writeHead(200, { 'Content-Type': 'text/xml' })
-    res.end()
+    const from = req.body.From
+    const body = req.body.Body
+    const bodyArray = body.split('')
+
+    if (from === myPhoneNumber && bodyArray[0] === 'sendMsg') {
+      const to = bodyArray[1]
+      const msgBody = bodyArray.splice(0, 2).join('')
+      await postToTwilio(msgBody, to)
+      const twiml = new MessagingResponse()
+      twiml.message(`msg has been transfered to: ${to}`)
+      res.writeHead(200, { 'Content-Type': 'text/xml' })
+      res.end(twiml)
+    } else {
+      const msg = `${from} : ${body}`
+      await postToTwilio(msg, myPhoneNumber)
+      res.writeHead(200, { 'Content-Type': 'text/xml' })
+      res.end()
+    }
   } catch (error) {
     return res.status(500).json({
       success: false,
