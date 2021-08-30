@@ -25,9 +25,10 @@ const receiveSms = async (req, res) => {
       //await postToTwilio(msgBody, to)
       const twiml = new MessagingResponse()
       twiml.message(`msg has been forwarded to: ${to}`)
-      res.setHeader(200, { 'Content-Type': 'text/xml' })
+      res.status = 200
+      res.setHeader('Content-Type', 'text/xml')
       res.write(twiml)
-      res.end(twiml)
+      res.end()
     } else {
       const msg = `${from} : ${body}`
       await postToTwilio(msg, myPhoneNumber)
